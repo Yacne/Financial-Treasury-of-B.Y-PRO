@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Money sending form</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Money sending form</h1>
+  <form id="send-money-form">
+    <label for="sender-name">Sender's name :</label>
+    <input type="text" id="sender-name" required>
+    <br><br>
+    <label for="sender-account">sender's account :</label>
+    <input type="text" id="sender-account" required>
+    <br><br>
+    <label for="sender-password">password account :</label>
+    <input type="password" id="sender-password" required>
+    <br><br>
+    <label for="receiver-password">password from the recipient :</label>
+    <input type="password" id="receiver-password" required>
+    <br><br>
+    <label for="amount">the amount specified to be sent :</label>
+    <input type="number" id="amount" required>
+    <br><br>
+    <button id="send-money-btn" style=" margin-bottom: 25%; background-color: #4CAF50; color: #fff;">confirm</button>
+  </form>
+
+
+<!-- add a div for the popup -->
+<div id="popup" style="display: none;">
+  <div id="popup-header">
+    <i id="popup-close" class="fas fa-times"></i>
+  </div>
+  <div id="popup-content">
+    <i id="popup-icon" class="fas fa-info-circle"></i>
+    <span id="popup-text"></span>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<p>
+  <span>Terms and conditions apply.</span>
+  <a href="#" id="show-more">Show more</a>
+  <div id="more-text" style="display: none;">
+    This is a form for sending money by the sender directly to the treasury of the B.Y PRO Foundation. Any fraud will result in serious consequences.
+  </div>
+</p>
+
+  <script src="script.js"></script>
+</body>
+</html>

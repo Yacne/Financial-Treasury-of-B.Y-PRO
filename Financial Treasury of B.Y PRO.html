@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Treasury of B.Y PRO</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: Black;
+            padding: 5px 10px;
+            height: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 30px;
+            margin-right: 10px;
+        }
+
+        .logo span {
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        #balance {
+            margin: 20px auto;
+            border: 2px solid green;
+            border-radius: 50%;
+            font-size: 50px;
+            color: #34C759;
+            width: 90%;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #balance-da {
+            font-weight: bold;
+            font-size: 30px;
+            text-align: right;
+            margin-right: 10px;
+            color: #34C759;
+        }
+
+        hr {
+            border-top: 1px solid #000;
+            margin: 0;
+        }
+
+        main {
+            padding: 10px;
+        }
+
+        #payments-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        #payments-table th, #payments-table td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        #payments-table th {
+            background-color: green;
+            border-radius: 0px;
+        }
+
+        #settings-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            background-color: #fff;
+            border: 2px solid green;
+            border-radius: 10px;
+            padding: 20px;
+            z-index: 1001;
+        }
+
+        #settings-popup h3 {
+            margin-top: 0;
+            text-align: center;
+        }
+
+        #settings-popup button {
+            padding: 5px;
+            background-color: #34C759;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100px;
+        }
+
+        .account-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 5px;
+            width: 100%;
+            text-align: center;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Popup for adding funds */
+        #add-funds-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            background-color: #fff;
+            border: 2px solid green;
+            border-radius: 10px;
+            padding: 20px;
+            z-index: 1001;
+        }
+
+        #add-funds-popup h2 {
+            margin-top: 0;
+            text-align: center;
+        }
+
+        #add-funds-popup input {
+            width: calc(100% - 20px);
+            padding: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        #add-funds-popup button {
+            padding: 5px 10px;
+            background-color: #34C759;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        #add-funds-popup button:last-child {
+            background-color: red;
+        }
+
+        #add-funds-popup .popup-buttons {
+            text-align: center;
+        }
+
+        @media only screen and (max-width: 600px) {
+            #balance {
+                width: 150px;
+                height: 150px;
+                font-size: 35px;
+            }
+
+            #balance-da {
+                font-size: 20px;
+            }
+
+            #payments-table th, #payments-table td {
+                padding: 5px;
+                font-size: 12px;
+            }
+        }
+
+        .controls-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        /* Dropdown Button */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropbtn {
+            background-color: #f1f1f1;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        /* Dropdown Content (Hidden by Default) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Show the dropdown menu on hover */
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown:hover .dropbtn {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <img src="Financial Treasury of B.Y PRO.png" alt="Financial Treasury of B.Y PRO">
+            <span>Financial Treasury of B.Y PRO</span>
+        </div>
+        <div style="display: flex; align-items: center;">
+            <i class="fas fa-plus" id="add-funds-btn" style="color: #fff; font-size: 1.5rem; cursor: pointer;"></i>
+        </div>
+    </nav>
+
+    <header>
+        <h1 id="balance">$ 0.00</h1>
+        <hr>
+        <h2 id="balance-da">0.00 DA</h2>
+        <hr>
+    </header>
+
+    <main>
+        <table id="payments-table">
+            <thead>
+                <tr>
+                    <th>Senders</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody id="payments-list">
+                <tr>
+                    <td>admin 0</td>
+                    <td>0</td>
+                    <td>-</td>
+                    <td>-</td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <canvas id="chart" width="400" height="200"></canvas>
+
+    <footer>
+        <p>For and From <a href="https://yacne.github.io/B.Y-PRO---Official-Page/B.Y%20PRO%20-%20Official%20Page.html">B.Y PRO</a></p>
+    </footer>
+
+    <!-- Popup for adding funds -->
+    <div id="add-funds-popup">
+        <h2>Add Funds</h2>
+        <input type="number" id="amount-input" placeholder="Enter amount">
+        <div class="popup-buttons">
+            <button id="confirm-btn">Confirm</button>
+            <button id="cancel-btn">Cancel</button>
+        </div>
+        <div class="dropdown">
+            <button class="dropbtn">
+                <i class="fas fa-caret-down"></i>
+            </button>
+            <div class="dropdown-content">
+                <a href="#" id="increase-btn">
+                    <i class="fas fa-plus-circle" style="color: green;"></i> Increase
+                </a>
+                <a href="#" id="decrease-btn">
+                    <i class="fas fa-minus-circle" style="color: red;"></i> Decrease
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="overlay"></div>
+
+    <script>
+        const balanceDisplay = document.getElementById("balance");
+        const balanceDaDisplay = document.getElementById("balance-da");
+        const paymentsList = document.getElementById("payments-list");
+        const amountInput = document.getElementById("amount-input");
+        const addFundsPopup = document.getElementById("add-funds-popup");
+        const overlay = document.getElementById("overlay");
+        const confirmBtn = document.getElementById("confirm-btn");
+        const cancelBtn = document.getElementById("cancel-btn");
+        const addFundsBtn = document.getElementById("add-funds-btn");
+        const increaseBtn = document.getElementById("increase-btn");
+        const decreaseBtn = document.getElementById("decrease-btn");
+        const ctx = document.getElementById('chart').getContext('2d');
+        let chartData = {
+            labels: [],
+            datasets: [{
+                label: 'Funds',
+                data: [],
+                backgroundColor: 'rgba(52, 199, 89, 0.5)',
+                borderColor: 'rgba(52, 199, 89, 1)',
+                borderWidth: 1
+            }]
+        };
+        let chart = new Chart(ctx, {
+            type: 'bar',
+            data: chartData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        let balance = 0;
+
+        addFundsBtn.onclick = () => {
+            overlay.style.display = 'block';
+            addFundsPopup.style.display = 'block';
+        };
+
+        cancelBtn.onclick = () => {
+            overlay.style.display = 'none';
+            addFundsPopup.style.display = 'none';
+            amountInput.value = '';
+        };
+
+        confirmBtn.onclick = () => {
+            const amount = parseFloat(amountInput.value);
+            if (!isNaN(amount)) {
+                if (increaseBtn.classList.contains("active")) {
+                    balance += amount;
+                } else {
+                    balance -= amount;
+                }
+                updateBalance();
+                addPaymentRecord(amount);
+            }
+            amountInput.value = '';
+            overlay.style.display = 'none';
+            addFundsPopup.style.display = 'none';
+        };
+
+        increaseBtn.onclick = () => {
+            increaseBtn.classList.add("active");
+            decreaseBtn.classList.remove("active");
+        };
+
+        decreaseBtn.onclick = () => {
+            decreaseBtn.classList.add("active");
+            increaseBtn.classList.remove("active");
+        };
+
+        function updateBalance() {
+            balanceDisplay.innerText = `$ ${balance.toFixed(2)}`;
+            balanceDaDisplay.innerText = `${(balance * 134.29).toFixed(2)} DA`;
+            chartData.labels.push(new Date().toLocaleString());
+            chartData.datasets[0].data.push(balance);
+            chart.update();
+        }
+
+        function addPaymentRecord(amount) {
+            const row = paymentsList.insertRow(1);
+            row.insertCell(0).innerText = `User ${paymentsList.rows.length - 1}`;
+            row.insertCell(1).innerText = amount;
+            row.insertCell(2).innerText = new Date().toLocaleDateString();
+            row.insertCell(3).innerText = new Date().toLocaleTimeString();
+        }
+    </script>
+</body>
+</html>
